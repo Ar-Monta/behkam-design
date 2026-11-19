@@ -31,7 +31,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Raw source archives (public/ contains the served assets)
+# Raw source archives in root (public/ contains the served assets)
 my-works/
-portrait.png
-portrait-cutout.png
+/portrait.png
+/portrait-cutout.png
