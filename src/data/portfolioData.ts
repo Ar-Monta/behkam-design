@@ -32,6 +32,7 @@ export interface DesignerInfo {
   behance: string;
   behanceHandle: string;
   linkedin: string;
+  linkedinHandle: string;
   portrait: string;
   portraitCutout: string;
 }
@@ -51,13 +52,14 @@ export const DESIGNER_INFO: DesignerInfo = {
   ],
   location: 'Istanbul, Türkiye',
   city: 'Istanbul',
-  email: 'ayshanbehkam2203@gmail.com',
+  email: 'ayshanbehkamkia@gmail.com',
   phone: '+98 914 254 2759 / +39 328 238 9594',
-  instagram: 'https://www.instagram.com/ayshan_bhkm/',
-  instagramHandle: '@ayshan_bhkm',
-  behance: 'https://www.behance.net/ayshinkia',
-  behanceHandle: 'behance.net/ayshinkia',
-  linkedin: 'https://www.linkedin.com/in/ayshin-behkam',
+  instagram: 'https://www.instagram.com/kia.logo/',
+  instagramHandle: '@kia.logo',
+  behance: 'https://www.behance.net/ayshanbehkamkia',
+  behanceHandle: 'behance.net/ayshanbehkamkia',
+  linkedin: 'https://www.linkedin.com/in/ayshin-behkam-586b55236',
+  linkedinHandle: 'in/ayshin-behkam',
   portrait: '/portrait.png',
   portraitCutout: '/portrait-cutout.png',
 };

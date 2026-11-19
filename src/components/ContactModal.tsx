@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Copy, Check, Send, Mail, Instagram, ExternalLink } from 'lucide-react';
+import { X, Copy, Check, Send, Mail, Instagram, Linkedin, ExternalLink } from 'lucide-react';
 import { DESIGNER_INFO } from '../data/portfolioData';
 
 interface ContactModalProps {
@@ -234,6 +234,15 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               >
                 <span>Behance</span>
                 <ExternalLink className="w-3 h-3" />
+              </a>
+              <a
+                href={DESIGNER_INFO.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--text-primary)] flex items-center gap-1 transition-colors"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
+                <span>LinkedIn</span>
               </a>
             </div>
           </div>

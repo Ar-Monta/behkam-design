@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Instagram, ExternalLink, MapPin, ArrowUp, Copy, Check } from 'lucide-react';
+import { Mail, Instagram, Linkedin, ExternalLink, MapPin, ArrowUp, Copy, Check } from 'lucide-react';
 import { DESIGNER_INFO } from '../data/portfolioData';
 
 interface FooterContactProps {
@@ -150,6 +150,19 @@ export const FooterContact: React.FC<FooterContactProps> = ({ onOpenContact }) =
               <div className="flex items-center gap-2.5">
                 <span className="font-bold text-xs text-[var(--accent-sage)]">Bē</span>
                 <span>Behance {DESIGNER_INFO.behanceHandle}</span>
+              </div>
+              <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+
+            <a
+              href={DESIGNER_INFO.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between p-2.5 rounded hover:bg-[var(--bg-surface)] border border-transparent hover:border-[var(--border-hairline)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all group"
+            >
+              <div className="flex items-center gap-2.5">
+                <Linkedin className="w-4 h-4 text-[var(--accent-sage)]" />
+                <span>LinkedIn {DESIGNER_INFO.linkedinHandle}</span>
               </div>
               <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
