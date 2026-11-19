@@ -169,7 +169,7 @@ export const FooterContact: React.FC<FooterContactProps> = ({ onOpenContact }) =
 
             <div className="flex items-center gap-2.5 p-2.5 text-[var(--text-muted)] text-[11px]">
               <MapPin className="w-4 h-4 text-[var(--accent-sage)]" />
-              <span>Istanbul &middot; Tabriz &middot; Worldwide Remote</span>
+              <span>Istanbul &middot; T&uuml;rkiye &middot; Worldwide Remote</span>
             </div>
           </div>
         </div>

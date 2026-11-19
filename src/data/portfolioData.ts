@@ -50,7 +50,7 @@ export const DESIGNER_INFO: DesignerInfo = {
     'Collaborating with visionary brands across Italy, Canada, the UAE & Turkey.',
     'Translating raw concepts into enduring, museum-grade visual languages.',
   ],
-  location: 'Istanbul, Türkiye',
+  location: 'Istanbul · Türkiye · Worldwide Remote',
   city: 'Istanbul',
   email: 'ayshanbehkamkia@gmail.com',
   phone: '+98 914 254 2759 / +39 328 238 9594',
