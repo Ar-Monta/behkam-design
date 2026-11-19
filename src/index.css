@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-canvas: #0F1412;
+  --bg-surface: #161C1A;
+  --bg-surface-elevated: #1D2421;
+  --text-primary: #EAE0D0;
+  --text-secondary: #BEB6AA;
+  --text-muted: #7E8680;
+  --accent-sage: #8BA193;
+  --accent-velvet: #7C3E44;
+  --border-hairline: rgba(234, 224, 208, 0.14);
+  --border-hairline-bright: rgba(234, 224, 208, 0.28);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0F1412;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(234, 224, 208, 0.18);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 224, 208, 0.35);
+}
+
+/* Smooth Lenis styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Editorial hairline utilities */
+.hairline-b {
+  border-bottom: 1px solid var(--border-hairline);
+}
+.hairline-t {
+  border-top: 1px solid var(--border-hairline);
+}
+.hairline-l {
+  border-left: 1px solid var(--border-hairline);
+}
+.hairline-r {
+  border-right: 1px solid var(--border-hairline);
+}
+
+/* Subtle architectural grain */
+.bg-grain {
+  background-image: radial-gradient(rgba(234, 224, 208, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Arched frame clip path */
+.clip-arch {
+  clip-path: polygon(0% 100%, 0% 25%, 50% 0%, 100% 25%, 100% 100%);
+  border-top-left-radius: 120px;
+  border-top-right-radius: 120px;
+}
+
+/* Botanical Vignettes */
+.botanical-glow-left {
+  background: radial-gradient(circle at 10% 40%, rgba(139, 161, 147, 0.08) 0%, transparent 60%);
+}
+.botanical-glow-right {
+  background: radial-gradient(circle at 90% 60%, rgba(124, 62, 68, 0.08) 0%, transparent 60%);
+}
