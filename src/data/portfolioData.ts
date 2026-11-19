@@ -61,7 +61,7 @@ export const DESIGNER_INFO: DesignerInfo = {
   linkedin: 'https://www.linkedin.com/in/ayshin-behkam-586b55236',
   linkedinHandle: 'in/ayshin-behkam',
   portrait: '/portrait.png',
-  portraitCutout: '/portrait-cutout.png',
+  portraitCutout: '/portrait2.png',
 };
 
 export const CATEGORIES = [

@@ -86,7 +86,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenContact }) => {
         {/* Layer 10: Foreground Portrait Cutout Overlapping Typography */}
         <motion.div
           style={{ y: portraitY, scale: portraitScale }}
-          className="relative z-10 w-full max-w-[460px] sm:max-w-[580px] lg:max-w-[720px] -mt-12 sm:-mt-20 md:-mt-28 lg:-mt-36 flex justify-center pointer-events-none"
+          className="relative z-10 w-full max-w-[320px] sm:max-w-[440px] md:max-w-[500px] lg:max-w-[560px] -mt-10 sm:-mt-16 md:-mt-22 lg:-mt-28 flex justify-center pointer-events-none"
         >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenContact }) => {
             <img
               src={DESIGNER_INFO.portraitCutout}
               alt="Ayshin Behkam Kia — Editorial Portrait"
-              className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] max-h-[420px] sm:max-h-[520px] lg:max-h-[600px]"
+              className="w-full h-auto object-contain drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] max-h-[440px] sm:max-h-[540px] lg:max-h-[640px]"
               loading="eager"
             />
 
