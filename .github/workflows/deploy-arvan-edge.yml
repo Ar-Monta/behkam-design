@@ -120,8 +120,8 @@ jobs:
             
             JSON_PAYLOAD=$(jq -n \
               --arg name "$APP_NAME" \
-              --rawfile script "$BUNDLE_FILE" \
-              '{name: $name, script: $script}')
+              --rawfile code "$BUNDLE_FILE" \
+              '{name: $name, bundled_code: $code, script: $code}')
 
             HTTP_RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST \
               "https://napi.arvancloud.ir/edge-computing/v1/edge-computes/deploy" \
