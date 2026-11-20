@@ -1,0 +1,145 @@
+name: Deploy to ArvanCloud Edge Computing (پردازش لبه)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'ArvanCloud Edge Application Name (Optional override)'
+        required: false
+        type: string
+        default: ''
+      origin_url:
+        description: 'ArvanCloud Object Storage URL (Optional override)'
+        required: false
+        type: string
+        default: ''
+
+concurrency:
+  group: deploy-arvan-edge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build & Deploy to Arvan Edge
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Sync Static Assets to ArvanCloud Object Storage (Optional)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARVAN_STORAGE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARVAN_STORAGE_SECRET_KEY }}
+          ENDPOINT_URL: ${{ vars.ARVAN_STORAGE_ENDPOINT || 'https://s3.ir-thr-at1.arvanstorage.ir' }}
+          BUCKET_NAME: ${{ vars.ARVAN_BUCKET_NAME || secrets.ARVAN_BUCKET_NAME }}
+        run: |
+          if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -n "$AWS_SECRET_ACCESS_KEY" ] && [ -n "$BUCKET_NAME" ]; then
+            echo "Syncing dist assets to Arvan Object Storage bucket: $BUCKET_NAME..."
+            aws s3 sync dist/ "s3://$BUCKET_NAME/" \
+              --endpoint-url "$ENDPOINT_URL" \
+              --exclude "edge-worker.js" \
+              --acl public-read \
+              --cache-control "public, max-age=31536000, immutable"
+            echo " Assets successfully synced to Object Storage!"
+          else
+            echo "Object Storage credentials not provided. Skipping automatic S3 upload."
+          fi
+
+      - name: Build Arvan Edge Worker Bundle
+        env:
+          ORIGIN_URL: ${{ inputs.origin_url || vars.ORIGIN_URL || secrets.ORIGIN_URL }}
+        run: npm run build:edge
+
+      - name: Install ArvanCloud Edge CLI (r1ec)
+        run: |
+          echo "Installing ArvanCloud Edge Computing CLI (r1ec)..."
+          npm install -g r1ec || true
+
+      - name: Deploy to ArvanCloud Edge Computing via CLI
+        env:
+          ARVAN_API_KEY: ${{ secrets.ARVAN_API_KEY }}
+          APP_NAME: ${{ inputs.app_name || vars.ARVAN_APP_NAME || secrets.ARVAN_APP_NAME }}
+          BUNDLE_FILE: dist/edge-worker.js
+        run: |
+          if [ -z "$ARVAN_API_KEY" ]; then
+            echo "::error::GitHub Secret 'ARVAN_API_KEY' is missing! Please configure it under Repo Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          if [ -z "$APP_NAME" ]; then
+            echo "::error::Application name is missing! Please configure 'ARVAN_APP_NAME' in GitHub Secrets or Variables."
+            exit 1
+          fi
+
+          if [ ! -f "$BUNDLE_FILE" ]; then
+            echo "::error::Bundle file '$BUNDLE_FILE' was not found!"
+            exit 1
+          fi
+
+          echo "Target ArvanCloud Edge Application: $APP_NAME"
+          echo "Edge Bundle File: $BUNDLE_FILE ($(wc -c < "$BUNDLE_FILE") bytes)"
+
+          CLEAN_TOKEN="${ARVAN_API_KEY#Apikey }"
+          AUTH_HEADER="Apikey $CLEAN_TOKEN"
+          DEPLOYED=false
+
+          # 1. Attempt deployment using ArvanCLI (r1ec)
+          if command -v r1ec &> /dev/null; then
+            echo " Authenticating with ArvanCloud CLI (r1ec)..."
+            if r1ec login -m "$AUTH_HEADER" || r1ec login -m "$CLEAN_TOKEN"; then
+              echo " Deploying via r1ec CLI..."
+              if r1ec deploy "$APP_NAME" -f "$BUNDLE_FILE"; then
+                echo " Successfully deployed using Arvan CLI (r1ec)!"
+                DEPLOYED=true
+              else
+                echo "::warning::r1ec deploy returned an error, trying REST API fallback..."
+              fi
+            else
+              echo "::warning::r1ec login failed, trying REST API fallback..."
+            fi
+          fi
+
+          # 2. Direct ArvanCloud Edge API deployment fallback (high reliability)
+          if [ "$DEPLOYED" != "true" ]; then
+            echo " Deploying via ArvanCloud Edge Computing API..."
+            
+            JSON_PAYLOAD=$(jq -n \
+              --arg name "$APP_NAME" \
+              --rawfile script "$BUNDLE_FILE" \
+              '{name: $name, script: $script}')
+
+            HTTP_RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST \
+              "https://napi.arvancloud.ir/edge-computing/v1/edge-computes/deploy" \
+              -H "Authorization: $AUTH_HEADER" \
+              -H "Content-Type: application/json" \
+              -H "Accept: application/json" \
+              --data "$JSON_PAYLOAD")
+
+            HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
+            RESPONSE_BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
+
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+              echo " Successfully deployed to ArvanCloud Edge Computing (HTTP $HTTP_STATUS)!"
+              echo "Response: $RESPONSE_BODY"
+              DEPLOYED=true
+            else
+              echo "::error::ArvanCloud Edge API deployment failed with status $HTTP_STATUS"
+              echo "Response: $RESPONSE_BODY"
+              exit 1
+            fi
+          fi
